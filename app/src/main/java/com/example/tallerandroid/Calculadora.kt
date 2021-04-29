@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.text.isDigitsOnly
+import java.lang.Exception
 import java.util.*
 import java.util.ArrayDeque
 import java.util.Stack
@@ -237,7 +238,7 @@ class Calculadora : AppCompatActivity() {
 
 
             }
-            finally
+            catch (e: Exception)
             {
                 txtResultado.text="Error"
             }
