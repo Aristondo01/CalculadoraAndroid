@@ -132,120 +132,136 @@ class Calculadora : AppCompatActivity() {
         }
 
         btnIgual.setOnClickListener{
-
-            var result : String
-            var exp : String
-            var stack : Stack<Char>
-            var num : ArrayList<Int>
-            var c : Char
-            val cont : Int
-            result=""
-            exp=txtResultado.text.toString()
-            cont= txtResultado.length()
-            stack= Stack()
-
-
-            for (i in 0 until cont)
+            try
             {
-                c= exp[i]
+                var result : String
+                var exp : String
+                var stack : Stack<Char>
+                var num : ArrayList<Int>
+                var c : Char
+                val cont : Int
+                result=""
+                exp=txtResultado.text.toString()
+                cont= txtResultado.length()
+                stack= Stack()
 
-                if (c.isLetterOrDigit()|| c.equals('.'))
+
+                for (i in 0 until cont)
                 {
-                    result+=c
-                }
-                else
-                {
-                    result+=" "
-                    while (0< stack.count() && (c.equals('+')||c.equals('/')||c.equals('-')||c.equals('*')))
+                    c= exp[i]
+
+                    if (c.isLetterOrDigit()|| c.equals('.'))
                     {
-                        result+=stack.pop()+" "
+                        result+=c
                     }
-                    stack.push(c)
+                    else
+                    {
+                        result+=" "
+                        while (0< stack.count() && (c.equals('+')||c.equals('/')||c.equals('-')||c.equals('*')) && prec(c)<= prec(stack.peek()))
+                        {
+                            result+=stack.pop()+" "
+                        }
+                        stack.push(c)
+                    }
+
                 }
+
+                while (!stack.isEmpty())
+                {
+                    result+=" "+stack.pop()+ " "
+                }
+
+                System.out.println("|"+result+"|")
+
+
+                var MyStack:Stack<Double>
+                MyStack= Stack()
+                var j: Int
+                j=result.length-1
+                var num1:String
+                var nummero1:Double
+                var nummero2:Double
+                num1=""
+
+                for (h in 0 until j)
+                {
+
+                    System.out.println("H es "+h+ " num es:"+num1)
+                    c= result[h]
+                    System.out.println("C es : "+c+"\n")
+                    if(!c.equals(' '))
+                    {
+
+                        num1+=c
+                    }else if(!(c == '+' || c == '/' || c == '-' || c == '*'))
+                    {
+                        if (!num1.isEmpty()|| num1.equals(" ")) {
+                            MyStack.push(num1.toDouble())
+                        }
+                        System.out.println("El stack tiene"+MyStack.peek())
+                        num1=""
+                    }
+
+                    if (c == '+' || c == '/' || c == '-' || c == '*')
+                    {
+                        nummero1 = MyStack.pop()
+                        nummero2 = MyStack.pop()
+
+
+                        if (c.equals('*'))
+                        {
+                            MyStack.push(nummero1*nummero2)
+                        }
+                        if (c.equals('/'))
+                        {
+                            MyStack.push(nummero2/nummero1)
+                        }
+                        if (c.equals('+'))
+                        {
+                            MyStack.push(nummero1+nummero2)
+                        }
+                        if (c.equals('-'))
+                        {
+                            MyStack.push(nummero2-nummero1)
+                        }
+                        num1=""
+
+
+                    }
+                }
+
+
+                //txtResultado.text=""+result
+                System.out.println(result)
+                txtResultado.text=""+MyStack.peek()
+
 
             }
-
-            while (!stack.isEmpty())
+            finally
             {
-                result+=" "+stack.pop()+ " "
+                txtResultado.text="Error"
             }
-
-            System.out.println("|"+result+"|")
-
-
-            var MyStack:Stack<Double>
-            MyStack= Stack()
-            var j: Int
-            j=result.length-1
-            var num1:String
-            var nummero1:Double
-            var nummero2:Double
-            num1=""
-
-            for (h in 0 until j)
-            {
-
-                System.out.println("H es "+h+ " num es:"+num1)
-                c= result[h]
-                System.out.println("C es : "+c+"\n")
-                if(!c.equals(' '))
-                {
-
-                    num1+=c
-                }else if(!(c == '+' || c == '/' || c == '-' || c == '*'))
-                {
-                    if (!num1.isEmpty()|| num1.equals(" ")) {
-                        MyStack.push(num1.toDouble())
-                    }
-                    System.out.println("El stack tiene"+MyStack.peek())
-                    num1=""
-                }
-
-                if (c == '+' || c == '/' || c == '-' || c == '*')
-                {
-                    nummero1 = MyStack.pop()
-                    nummero2 = MyStack.pop()
-
-
-                    if (c.equals('*'))
-                    {
-                        MyStack.push(nummero1*nummero2)
-                    }
-                    if (c.equals('/'))
-                    {
-                        MyStack.push(nummero2/nummero1)
-                    }
-                    if (c.equals('+'))
-                    {
-                        MyStack.push(nummero1+nummero2)
-                    }
-                    if (c.equals('-'))
-                    {
-                        MyStack.push(nummero2-nummero1)
-                    }
-                    num1=""
-
-
-                }
-            }
-
-
-            //txtResultado.text=""+result
-            System.out.println(result)
-            txtResultado.text=""+MyStack.peek()
-
-
 
 
         }
 
+    }
+
+    private fun  prec(a:Char): Int
+    {
+        if(a.equals('+')||a.equals("-"))
+        {
+            return 1
+        }
+
+        if(a.equals('*')||a.equals("/"))
+        {
+            return 2
+        }
 
 
 
-
-
-
-
+        return -1
     }
 
 
